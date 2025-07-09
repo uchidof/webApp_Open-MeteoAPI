@@ -17,7 +17,6 @@ Um **Dashboard Web** feito em Flutter para consumir e exibir dados climáticos e
 - **Dart**
 - **HTTP package** para requisições REST
 - **Open-Meteo API** como backend gratuito
-- UI minimalista com suporte a fullscreen
 
 ---
 
