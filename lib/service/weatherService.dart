@@ -23,6 +23,8 @@ class WeatherService {
         print('[APP]: Dados recebidos!\nDADOS:\n${json}');
 
         final weatherNow = WeatherNow.fromJson(json);
+        print('DADOS no objeto!\nDADOS TRATADOS:\n${weatherNow.writeWeather()}');
+
         return weatherNow; //Retorno objeto WeatherNow
       } else {
         throw Exception('Erro na API: ${response.statusCode}');
