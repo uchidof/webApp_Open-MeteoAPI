@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'service/apiService.dart';
+import 'service/weatherService.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Apiservice apiservice = Apiservice();
+  final WeatherService apiservice = WeatherService();
 
   Map<String, dynamic>? weatherData;
   bool isLoading = true;
@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       final mesExtenso = meses[month] ?? month;
 
-      return '$day de $mesExtenso de $year às $timePart';
+      return '$day de $mesExtenso de $year á partir das $timePart';
     } catch (e) {
       return isoDate; // retorna original se der erro
     }
