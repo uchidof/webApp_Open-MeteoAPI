@@ -1,11 +1,11 @@
 import 'dart:convert'; // Para decodificar JSON
 import 'package:http/http.dart' as http;
-import 'package:weather_dashboard/model/weatherNow.dart';
+import 'package:weather_dashboard/model/weatherModel.dart';
 
 class WeatherService {
   final String _baseUrl = 'https://api.open-meteo.com/v1/forecast';
 
-  Future<WeatherNow> fetchWeather({
+  Future<WeatherModel> fetchWeather({
     required double latitude,
     required double longitude,
   }) async {
@@ -16,14 +16,17 @@ class WeatherService {
 
     try {
       print('[APP]: Chamando API...');
+      print("[APP]: Chamada feita em: ${DateTime.now()}");
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
         print('[APP]: Dados recebidos!\nDADOS:\n${json}');
 
-        final weatherNow = WeatherNow.fromJson(json);
-        print('DADOS no objeto!\nDADOS TRATADOS:\n${weatherNow.writeWeather()}');
+        final weatherNow = WeatherModel.fromJson(json);
+        print(
+          'DADOS no objeto!\nDADOS TRATADOS:\n${weatherNow.writeWeather()}',
+        );
 
         return weatherNow; //Retorno objeto WeatherNow
       } else {

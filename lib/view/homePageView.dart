@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_dashboard/model/weatherNow.dart';
+import 'package:weather_dashboard/model/weatherModel.dart';
 import 'package:weather_dashboard/service/weatherService.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,14 +10,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<WeatherNow> futureWeather;
+  late Future<WeatherModel> futureWeather;
 
   @override
   void initState() {
     super.initState();
     futureWeather = WeatherService().fetchWeather(
-      latitude: -23.55, // São Paulo como padrão temporário
+      latitude: -23.55,
       longitude: -46.63,
+      //SP
     );
   }
 
@@ -32,14 +33,14 @@ class _HomePageState extends State<HomePage> {
             children: [
               // Título
               const Text(
-                "WeatherNow",
+                "Clima Atual",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 20),
 
               // FutureBuilder exibindo clima
-              FutureBuilder<WeatherNow>(
+              FutureBuilder<WeatherModel>(
                 future: futureWeather,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -47,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   if (snapshot.hasError) {
-                    return Text("Erro: ${snapshot.error}");
+                    return const Text("ERRO."); //TODO tratameto de erro
                   }
 
                   if (!snapshot.hasData) {
@@ -109,8 +110,16 @@ class _HomePageState extends State<HomePage> {
               // Botão será adicionado depois
               // Placeholder
               ElevatedButton(
-                onPressed: () {},
-                child: const Text("Atualizar (em breve)"),
+                onPressed: () {
+                  setState(() {
+                    futureWeather = WeatherService().fetchWeather(
+                      latitude: -23.55,
+                      longitude: -46.63,
+                      //SP
+                    );
+                  });
+                },
+                child: const Text("Atualizar"),
               ),
             ],
           ),
