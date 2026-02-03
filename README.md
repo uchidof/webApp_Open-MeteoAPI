@@ -23,14 +23,18 @@ Um **Dashboard Web** feito em Flutter para consumir e exibir dados climáticos e
 ## Como rodar o projeto
 
 1️⃣ Clone o repositório:
-
+```bash
 git clone https://github.com/seu-usuario/webApp_Open-MeteoAPI.git
+```
+```bash
 cd webApp_Open-MeteoAPI
-
+```
 2️⃣ Instale as dependências:
+```bash
 flutter pub get
-
+```
 3️⃣ Execute no navegador:
+```bash
 flutter run -d chrome
-
+```
 ✅ O app abrirá no navegador padrão.
