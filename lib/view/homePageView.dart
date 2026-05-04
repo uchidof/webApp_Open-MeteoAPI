@@ -11,6 +11,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<WeatherModel> futureWeather;
+  bool isRetrying = false;
 
   @override
   void initState() {
@@ -43,12 +44,67 @@ class _HomePageState extends State<HomePage> {
               FutureBuilder<WeatherModel>(
                 future: futureWeather,
                 builder: (context, snapshot) {
+                  // Reset seguro do isRetrying quando o Future terminar
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      isRetrying) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      setState(() {
+                        isRetrying = false;
+                      });
+                    });
+                  }
+
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {
-                    return const Text("ERRO."); //TODO tratameto de erro
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.warning),
+                              SizedBox(width: 8),
+                              Text("Não foi possível carregar os dados"),
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: isRetrying
+                                ? null
+                                : () {
+                                    setState(() {
+                                      isRetrying = true;
+                                      futureWeather = WeatherService()
+                                          .fetchWeather(
+                                            latitude: -23.55,
+                                            longitude: -46.63,
+                                          );
+                                    });
+                                  },
+                            child: isRetrying
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const [
+                                      SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text("Carregando..."),
+                                    ],
+                                  )
+                                : const Text("Tentar novamente"),
+                          ),
+                        ],
+                      ),
+                    );
                   }
 
                   if (!snapshot.hasData) {
@@ -91,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 10),
 
                       Text(
-                        "Está de dia?: ${weather.isDay ? "Sim" : "Não"}",
+                        "Período: ${weather.isDay ? "Dia" : "Noite"}",
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 10),
@@ -107,8 +163,6 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 20),
 
-              // Botão será adicionado depois
-              // Placeholder
               ElevatedButton(
                 onPressed: () {
                   setState(() {

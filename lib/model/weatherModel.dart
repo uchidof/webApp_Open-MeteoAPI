@@ -21,11 +21,11 @@ class WeatherModel {
 
   String writeWeather() {
     return '''
-Temperatura: ${temp}°C
+Temperatura: $temp°C
 Clima: $description
 Horário: $time
-Vento: ${windspeed} km/h
-Direção do vento: ${winddirection}°
+Vento: $windspeed km/h
+Direção do vento: $winddirection°
 Dia?: ${isDay ? "Sim" : "Não"}
 ''';
   }
