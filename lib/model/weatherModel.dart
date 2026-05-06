@@ -1,4 +1,5 @@
 class WeatherModel {
+  // current_weather
   final double temp;
   final String description;
   final String time;
@@ -7,8 +8,16 @@ class WeatherModel {
   final int winddirection;
   final bool isDay;
   final int interval;
+  // daily
+  final double maxTemp;
+  final double minTemp;
+  final int rainProbability;
+  final DateTime sunrise;
+  final DateTime sunset;
+  final double precipitationSum;
 
   WeatherModel(
+    // current_weather
     this.temp,
     this.description,
     this.time,
@@ -17,13 +26,26 @@ class WeatherModel {
     this.winddirection,
     this.isDay,
     this.interval,
+    // daily
+    this.maxTemp,
+    this.minTemp,
+    this.rainProbability,
+    this.sunrise,
+    this.sunset,
+    this.precipitationSum,
   );
 
   String writeWeather() {
     return '''
 Temperatura: $temp°C
+MAX: $maxTemp°C
+MIN: $minTemp°C
 Clima: $description
+Probabilidade de Chuva: $rainProbability%
+Quantidade de Chuva: $precipitationSum mm
 Horário: $time
+Sol nasce: $sunrise
+Por do Sol: $sunset 
 Vento: $windspeed km/h
 Direção do vento: $winddirection°
 Dia?: ${isDay ? "Sim" : "Não"}
@@ -41,7 +63,14 @@ Dia?: ${isDay ? "Sim" : "Não"}
       interval = json['current_weather']['interval'],
       description = WeatherModel.mapWeatherCode(
         json['current_weather']['weathercode'],
-      );
+      ),
+      //daily
+      maxTemp = json['daily']['temperature_2m_max'][0].toDouble(),
+      minTemp = json['daily']['temperature_2m_min'][0].toDouble(),
+      rainProbability = json['daily']['precipitation_probability_max'][0],
+      sunrise = DateTime.parse(json["daily"]["sunrise"][0]).toLocal(),
+      sunset = DateTime.parse(json["daily"]["sunset"][0]).toLocal(),
+      precipitationSum = json['daily']['precipitation_sum'][0].toDouble();
 
   // Conversor do código climático
   static String mapWeatherCode(int code) {

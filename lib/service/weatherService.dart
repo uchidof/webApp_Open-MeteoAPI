@@ -10,7 +10,7 @@ class WeatherService {
     required double longitude,
   }) async {
     final url = Uri.parse(
-      '$_baseUrl?latitude=$latitude&longitude=$longitude&current_weather=true',
+      '$_baseUrl?latitude=$latitude&longitude=$longitude&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,precipitation_sum&timezone=auto',
     );
     print('[APP]: URL formada: ${url}');
 
