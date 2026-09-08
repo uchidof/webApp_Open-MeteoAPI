@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
               // Título
               const Text(
                 "Clima Atual",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 20),
@@ -116,23 +116,73 @@ class _HomePageState extends State<HomePage> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Temperatura: ${weather.temp}°C",
-                        style: const TextStyle(fontSize: 22),
-                      ),
-                      const SizedBox(height: 10),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "${weather.temp}°C",
+                                    style: const TextStyle(fontSize: 44),
+                                  ),
+                                  const SizedBox(height: 10, width: 10),
 
-                      Text(
-                        "Clima: ${weather.description}",
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      const SizedBox(height: 10),
+                                  Icon(
+                                    weather.isDay
+                                        ? Icons.wb_sunny_sharp
+                                        : Icons.dark_mode_sharp,
+                                    size: 40,
+                                  ),
 
-                      Text(
-                        "Horário da medição (local): ${weather.localTime}\nHorário da medição (servidor): ${weather.time}",
-                        style: const TextStyle(fontSize: 16),
+                                  const SizedBox(height: 10, width: 10),
+
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        " MAX: ${weather.maxTemp}°C",
+                                        style: const TextStyle(fontSize: 22),
+                                      ),
+                                      Text(
+                                        " MIN: ${weather.minTemp}°C",
+                                        style: const TextStyle(fontSize: 22),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const Divider(thickness: 1, height: 20),
+                              Text(
+                                "${weather.description}",
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 10),
+
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Chance de chuva: ${weather.rainProbability}%",
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: LinearProgressIndicator(
+                                  value: weather.rainProbability / 100,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
 
                       Text(
                         "Velocidade do vento: ${weather.windspeed} km/h",
@@ -141,13 +191,14 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 10),
 
                       Text(
-                        "Direção do vento: ${weather.winddirection}°",
+                        "Direção do vento: ${weather.winddirection}° / 360° (0° = N)",
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 10),
 
+                      /*
                       Text(
-                        "Período: ${weather.isDay ? "Dia" : "Noite"}",
+                        "Horário da medição (local): ${weather.localTime}\nHorário da medição (servidor): ${weather.time}",
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 10),
@@ -156,6 +207,7 @@ class _HomePageState extends State<HomePage> {
                         "Intervalo da medição: ${weather.interval} segundos",
                         style: const TextStyle(fontSize: 16),
                       ),
+                      */
                     ],
                   );
                 },
@@ -167,9 +219,9 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   setState(() {
                     futureWeather = WeatherService().fetchWeather(
-                      latitude: -23.55,
-                      longitude: -46.63,
-                      //SP
+                      latitude: -22.85,
+                      longitude: -47.61,
+                      //Riodas
                     );
                   });
                 },
