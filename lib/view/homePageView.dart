@@ -114,14 +114,17 @@ class _HomePageState extends State<HomePage> {
                   final weather = snapshot.data!;
 
                   return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Card(
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
                                     "${weather.temp}°C",
@@ -173,28 +176,46 @@ class _HomePageState extends State<HomePage> {
                                 "Chance de chuva: ${weather.rainProbability}%",
                                 style: const TextStyle(fontSize: 18),
                               ),
+
                               const SizedBox(width: 10),
+
                               Expanded(
                                 child: LinearProgressIndicator(
                                   value: weather.rainProbability / 100,
                                 ),
+                              ),
+
+                              const SizedBox(width: 10),
+
+                              Text(
+                                "${weather.precipitationSum} mm",
+                                style: const TextStyle(fontSize: 18),
                               ),
                             ],
                           ),
                         ),
                       ),
 
-                      Text(
-                        "Velocidade do vento: ${weather.windspeed} km/h",
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 10),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Velocidade do vento: ${weather.windspeed} km/h",
+                                style: const TextStyle(fontSize: 16),
+                              ),
 
-                      Text(
-                        "Direção do vento: ${weather.winddirection}° / 360° (0° = N)",
-                        style: const TextStyle(fontSize: 16),
+                              const SizedBox(height: 10),
+
+                              Text(
+                                "Direção do vento: ${weather.winddirection}° [${weather.windDirectionCardinal}]",
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 10),
 
                       /*
                       Text(

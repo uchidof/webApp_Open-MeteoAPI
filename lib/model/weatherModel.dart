@@ -52,6 +52,26 @@ Dia?: ${isDay ? "Sim" : "Não"}
 ''';
   }
 
+  String get windDirectionCardinal {
+    if (winddirection >= 337.5 || winddirection < 22.5) {
+      return "N";
+    } else if (winddirection < 67.5) {
+      return "NE";
+    } else if (winddirection < 112.5) {
+      return "E";
+    } else if (winddirection < 157.5) {
+      return "SE";
+    } else if (winddirection < 202.5) {
+      return "S";
+    } else if (winddirection < 247.5) {
+      return "SW";
+    } else if (winddirection < 292.5) {
+      return "W";
+    } else {
+      return "NW";
+    }
+  }
+
   // Construtor a partir de JSON
   WeatherModel.fromJson(Map<String, dynamic> json)
     : temp = json['current_weather']['temperature'].toDouble(),
