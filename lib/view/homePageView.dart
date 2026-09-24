@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather_dashboard/model/weatherModel.dart';
 import 'package:weather_dashboard/service/weatherService.dart';
+import 'package:weather_dashboard/view/weatherMeter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -112,6 +113,17 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   final weather = snapshot.data!;
+                  final meterCode = weather.meterCode;
+
+                  final sunLevel = int.parse(meterCode[0]);
+                  final cloudLevel = int.parse(meterCode[1]);
+                  final rainLevel = int.parse(meterCode[2]);
+
+                  print("Weather code: ${weather.weatherCode}");
+                  print("Meter code: $meterCode");
+                  print("Sun: $sunLevel");
+                  print("Cloud: $cloudLevel");
+                  print("Rain: $rainLevel");
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -157,9 +169,42 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      Card(
+                        // CARD medidor de clima
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  WeatherMeter(
+                                    icon: Icons.wb_sunny,
+                                    level: sunLevel,
+                                  ),
+
+                                  WeatherMeter(
+                                    icon: Icons.cloud,
+                                    level: cloudLevel,
+                                  ),
+
+                                  WeatherMeter(
+                                    icon: Icons.water_drop,
+                                    level: rainLevel,
+                                  ),
+                                ],
+                              ),
+
                               const Divider(thickness: 1, height: 20),
+
                               Text(
-                                "${weather.description}",
+                                weather.description,
                                 style: const TextStyle(fontSize: 18),
                               ),
                             ],
@@ -168,6 +213,7 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       Card(
+                        //CARD Prob. de chuva
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Row(
@@ -197,6 +243,7 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       Card(
+                        // CARD Vento
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(

@@ -1,6 +1,7 @@
 class WeatherModel {
   // current_weather
   final double temp;
+  final int weatherCode;
   final String description;
   final String time;
   final DateTime localTime;
@@ -8,6 +9,7 @@ class WeatherModel {
   final int winddirection;
   final bool isDay;
   final int interval;
+
   // daily
   final double maxTemp;
   final double minTemp;
@@ -17,8 +19,8 @@ class WeatherModel {
   final double precipitationSum;
 
   WeatherModel(
-    // current_weather
     this.temp,
+    this.weatherCode,
     this.description,
     this.time,
     this.localTime,
@@ -26,7 +28,6 @@ class WeatherModel {
     this.winddirection,
     this.isDay,
     this.interval,
-    // daily
     this.maxTemp,
     this.minTemp,
     this.rainProbability,
@@ -72,9 +73,14 @@ Dia?: ${isDay ? "Sim" : "Não"}
     }
   }
 
+  String get meterCode {
+    return WeatherModel.mapWeatherMeterCode(weatherCode);
+  }
+
   // Construtor a partir de JSON
   WeatherModel.fromJson(Map<String, dynamic> json)
     : temp = json['current_weather']['temperature'].toDouble(),
+      weatherCode = json['current_weather']['weathercode'],
       time = json['current_weather']['time'],
       localTime = DateTime.parse(json["current_weather"]["time"]).toLocal(),
       windspeed = json['current_weather']['windspeed'].toDouble(),
@@ -84,7 +90,8 @@ Dia?: ${isDay ? "Sim" : "Não"}
       description = WeatherModel.mapWeatherCode(
         json['current_weather']['weathercode'],
       ),
-      //daily
+
+      // daily
       maxTemp = json['daily']['temperature_2m_max'][0].toDouble(),
       minTemp = json['daily']['temperature_2m_min'][0].toDouble(),
       rainProbability = json['daily']['precipitation_probability_max'][0],
@@ -92,11 +99,11 @@ Dia?: ${isDay ? "Sim" : "Não"}
       sunset = DateTime.parse(json["daily"]["sunset"][0]).toLocal(),
       precipitationSum = json['daily']['precipitation_sum'][0].toDouble();
 
-  // Conversor do código climático
+  // Conversor: código climático -> Nome do clima
   static String mapWeatherCode(int code) {
     if (code == 0) return "Céu limpo";
-    if (code == 1) return "Predominantemente limpo";
-    if (code == 2) return "Parcialmente nublado";
+    if (code == 1) return "Céu fechando";
+    if (code == 2) return "Pouco nublado";
     if (code == 3) return "Nublado";
 
     if (code >= 45 && code <= 48) return "Névoa";
@@ -107,5 +114,22 @@ Dia?: ${isDay ? "Sim" : "Não"}
     if (code == 95) return "Tempestade";
 
     return "Desconhecido";
+  }
+
+  // Conversor: código climático -> Medidor do clima
+  static String mapWeatherMeterCode(int code) {
+    if (code == 0) return "300";
+    if (code == 1) return "210";
+    if (code == 2) return "120";
+    if (code == 3) return "030";
+
+    if (code >= 45 && code <= 48) return "021";
+    if (code >= 51 && code <= 57) return "011";
+    if (code >= 61 && code <= 67) return "012";
+    if (code >= 80 && code <= 82) return "112";
+
+    if (code == 95) return "023";
+
+    return "000";
   }
 }
