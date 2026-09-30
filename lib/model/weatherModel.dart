@@ -38,18 +38,19 @@ class WeatherModel {
 
   String writeWeather() {
     return '''
-Temperatura: $temp°C
-MAX: $maxTemp°C
-MIN: $minTemp°C
-Clima: $description
-Probabilidade de Chuva: $rainProbability%
-Quantidade de Chuva: $precipitationSum mm
-Horário: $time
-Sol nasce: $sunrise
-Por do Sol: $sunset 
-Vento: $windspeed km/h
-Direção do vento: $winddirection°
-Dia?: ${isDay ? "Sim" : "Não"}
+\n[model]:
+- Temperatura: $temp°C
+- MAX: $maxTemp°C
+- MIN: $minTemp°C
+- Clima: $description
+- Probabilidade de Chuva: $rainProbability%
+- Quantidade de Chuva: $precipitationSum mm
+- Horário: $time
+- Sol nasce: $sunrise
+- Por do Sol: $sunset 
+- Vento: $windspeed km/h
+- Direção do vento: $winddirection°
+- Dia?: ${isDay ? "Sim" : "Não"}
 ''';
   }
 

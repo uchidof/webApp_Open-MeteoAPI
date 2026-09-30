@@ -4,7 +4,14 @@ import 'package:weather_dashboard/service/weatherService.dart';
 import 'package:weather_dashboard/view/weatherMeter.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final bool isDarkMode;
+  final VoidCallback onToggleTheme;
+
+  const HomePage({
+    super.key,
+    required this.isDarkMode,
+    required this.onToggleTheme,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -33,10 +40,25 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Título
-              const Text(
-                "Clima Atual",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Título
+                  const Text(
+                    "Clima Atual",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  ToggleButtons(
+                    isSelected: [!widget.isDarkMode, widget.isDarkMode],
+                    onPressed: (index) {
+                      widget.onToggleTheme();
+                    },
+                    children: const [
+                      Icon(Icons.light_mode),
+                      Icon(Icons.dark_mode),
+                    ],
+                  ),
+                ],
               ),
 
               const SizedBox(height: 20),
@@ -119,11 +141,12 @@ class _HomePageState extends State<HomePage> {
                   final cloudLevel = int.parse(meterCode[1]);
                   final rainLevel = int.parse(meterCode[2]);
 
-                  print("Weather code: ${weather.weatherCode}");
-                  print("Meter code: $meterCode");
-                  print("Sun: $sunLevel");
-                  print("Cloud: $cloudLevel");
-                  print("Rain: $rainLevel");
+                  print(
+                    "\n[home]:Weather code: ${weather.weatherCode} = $meterCode",
+                  );
+                  print(
+                    "[home]:Sun: $sunLevel // Cloud: $cloudLevel // Rain: $rainLevel",
+                  );
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

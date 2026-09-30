@@ -12,28 +12,28 @@ class WeatherService {
     final url = Uri.parse(
       '$_baseUrl?latitude=$latitude&longitude=$longitude&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,precipitation_sum&timezone=auto',
     );
-    print('[APP]: URL formada: ${url}');
+    print('[service]: URL formada: ${url}');
 
     try {
-      print('[APP]: Chamando API...');
-      print("[APP]: Chamada feita em: ${DateTime.now()}");
+      print('[service]: Chamando API...');
+      print("[service]: Chamada feita em: ${DateTime.now()}");
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
-        print('[APP]: Dados recebidos!\nDADOS:\n${json}');
+        print('[service]: Dados recebidos! Imprimindo Dados...${json}');
 
         final weatherNow = WeatherModel.fromJson(json);
         print(
-          'DADOS no objeto!\nDADOS TRATADOS:\n${weatherNow.writeWeather()}',
+          '[service]: DADOS no objeto! Imprimindo Dados...${weatherNow.writeWeather()}',
         );
 
         return weatherNow; //Retorno objeto WeatherNow
       } else {
-        throw Exception('Erro na API: ${response.statusCode}');
+        throw Exception('[service]: Erro na API: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Erro ao buscar dados: $e');
+      throw Exception('[service]: Erro ao buscar dados: $e');
     }
   }
 }
