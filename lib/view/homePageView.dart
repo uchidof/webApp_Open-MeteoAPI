@@ -304,19 +304,31 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    futureWeather = WeatherService().fetchWeather(
-                      latitude: -22.85,
-                      longitude: -47.61,
-                      //Riodas
-                    );
-                  });
-                },
-                child: const Text("Atualizar"),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 1,
+                    ),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      futureWeather = WeatherService().fetchWeather(
+                        latitude: -22.85,
+                        longitude: -47.61,
+                      );
+                    });
+                  },
+                  icon: const Icon(Icons.refresh),
+                  label: const Text("Atualizar"),
+                ),
               ),
             ],
           ),

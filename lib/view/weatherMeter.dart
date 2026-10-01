@@ -20,8 +20,11 @@ class WeatherMeter extends StatelessWidget {
               height: 35,
               margin: const EdgeInsets.only(bottom: 3),
               decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  width: 1,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                borderRadius: BorderRadius.zero,
                 color: isActive
                     ? Theme.of(context).colorScheme.primary
                     : Colors.transparent,
