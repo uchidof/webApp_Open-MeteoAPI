@@ -48,15 +48,26 @@ class _HomePageState extends State<HomePage> {
                     "Clima Atual",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  ToggleButtons(
-                    isSelected: [!widget.isDarkMode, widget.isDarkMode],
-                    onPressed: (index) {
-                      widget.onToggleTheme();
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 1,
+                      ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        futureWeather = WeatherService().fetchWeather(
+                          latitude: -22.85,
+                          longitude: -47.61,
+                        );
+                      });
                     },
-                    children: const [
-                      Icon(Icons.light_mode),
-                      Icon(Icons.dark_mode),
-                    ],
+                    icon: const Icon(Icons.satellite_alt_sharp),
+                    label: const Text("Atualizar"),
                   ),
                 ],
               ),
@@ -306,28 +317,18 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 10),
 
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.primary,
-                      width: 1,
-                    ),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      futureWeather = WeatherService().fetchWeather(
-                        latitude: -22.85,
-                        longitude: -47.61,
-                      );
-                    });
+              const Spacer(),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: ToggleButtons(
+                  isSelected: [!widget.isDarkMode, widget.isDarkMode],
+                  onPressed: (index) {
+                    widget.onToggleTheme();
                   },
-                  icon: const Icon(Icons.refresh),
-                  label: const Text("Atualizar"),
+                  children: const [
+                    Icon(Icons.light_mode),
+                    Icon(Icons.dark_mode),
+                  ],
                 ),
               ),
             ],

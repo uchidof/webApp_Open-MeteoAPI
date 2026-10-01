@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
+  static final String? terminalFont = GoogleFonts.jetBrainsMono().fontFamily;
+
   static const Color terminalDark = Color(0xFF00FF66);
   static const Color terminalDarkBackground = Color(0xFF050505);
 
@@ -9,6 +12,7 @@ class AppTheme {
 
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
+    fontFamily: terminalFont,
 
     // Fundo geral
     scaffoldBackgroundColor: terminalLightBackground,
@@ -42,6 +46,8 @@ class AppTheme {
 
   static ThemeData dark = ThemeData(
     brightness: Brightness.dark,
+    fontFamily: terminalFont,
+
     // Fundo geral
     scaffoldBackgroundColor: terminalDarkBackground,
 
