@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:weather_dashboard/model/weatherModel.dart';
 import 'package:weather_dashboard/service/weatherService.dart';
 import 'package:weather_dashboard/view/weatherMeter.dart';
+import 'package:weather_dashboard/widgets/percentageDisplay.dart';
 
 class HomePage extends StatefulWidget {
   final bool isDarkMode;
@@ -40,36 +42,79 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Título
-                  const Text(
-                    "Clima Atual",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      side: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                        width: 1,
-                      ),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero,
-                      ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        futureWeather = WeatherService().fetchWeather(
-                          latitude: -22.85,
-                          longitude: -47.61,
-                        );
-                      });
-                    },
-                    icon: const Icon(Icons.satellite_alt_sharp),
-                    label: const Text("Atualizar"),
-                  ),
-                ],
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 390) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Clima Atual",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              futureWeather = WeatherService().fetchWeather(
+                                latitude: -22.85,
+                                longitude: -47.61,
+                              );
+                            });
+                          },
+                          icon: const Icon(Icons.refresh_sharp),
+                          style: ElevatedButton.styleFrom(
+                            side: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 1,
+                            ),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Clima Atual",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              futureWeather = WeatherService().fetchWeather(
+                                latitude: -22.85,
+                                longitude: -47.61,
+                              );
+                            });
+                          },
+                          icon: const Icon(Icons.satellite_alt_sharp),
+                          label: const Text("Atualizar"),
+                          style: ElevatedButton.styleFrom(
+                            side: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 1,
+                            ),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
 
               const SizedBox(height: 20),
@@ -107,6 +152,15 @@ class _HomePageState extends State<HomePage> {
                           ),
                           SizedBox(height: 8),
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              side: BorderSide(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 1,
+                              ),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                            ),
                             onPressed: isRetrying
                                 ? null
                                 : () {
@@ -151,57 +205,122 @@ class _HomePageState extends State<HomePage> {
                   final sunLevel = int.parse(meterCode[0]);
                   final cloudLevel = int.parse(meterCode[1]);
                   final rainLevel = int.parse(meterCode[2]);
-
                   print(
-                    "\n[home]:Weather code: ${weather.weatherCode} = $meterCode",
-                  );
-                  print(
-                    "[home]:Sun: $sunLevel // Cloud: $cloudLevel // Rain: $rainLevel",
+                    "\n[home]: Weather code: ${weather.weatherCode} = $meterCode = $sunLevel | $cloudLevel | $rainLevel",
                   );
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Card(
+                        // Card Temperatura
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "${weather.temp}°C",
-                                    style: const TextStyle(fontSize: 44),
-                                  ),
-                                  const SizedBox(height: 10, width: 10),
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  print(
+                                    "[layoutBuilder]: Largura disponível: ${constraints.maxWidth}",
+                                  );
+                                  if (constraints.maxWidth < 390) {
+                                    // tela Pequena:
+                                    // TEMP + ICON acima
+                                    // MAX e MIN abaixo
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              weather.isDay
+                                                  ? Icons.wb_sunny_sharp
+                                                  : Icons.dark_mode_sharp,
+                                              size: 40,
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                              width: 10,
+                                            ),
 
-                                  Icon(
-                                    weather.isDay
-                                        ? Icons.wb_sunny_sharp
-                                        : Icons.dark_mode_sharp,
-                                    size: 40,
-                                  ),
+                                            Text(
+                                              "${weather.temp}°C",
+                                              style: const TextStyle(
+                                                fontSize: 44,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "MAX: ${weather.maxTemp}°C",
+                                              style: const TextStyle(
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                            Text(
+                                              "min: ${weather.minTemp}°C",
+                                              style: const TextStyle(
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    // tela Grande:
+                                    // ROW Temp + Icon + MaxMin
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${weather.temp}°C",
+                                          style: const TextStyle(fontSize: 44),
+                                        ),
 
-                                  const SizedBox(height: 10, width: 10),
+                                        const SizedBox(height: 10, width: 10),
 
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        " MAX: ${weather.maxTemp}°C",
-                                        style: const TextStyle(fontSize: 22),
-                                      ),
-                                      Text(
-                                        " MIN: ${weather.minTemp}°C",
-                                        style: const TextStyle(fontSize: 22),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        Icon(
+                                          weather.isDay
+                                              ? Icons.wb_sunny_sharp
+                                              : Icons.dark_mode_sharp,
+                                          size: 40,
+                                        ),
+
+                                        const SizedBox(height: 10, width: 10),
+
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              " MAX: ${weather.maxTemp}°C",
+                                              style: const TextStyle(
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                            Text(
+                                              " MIN: ${weather.minTemp}°C",
+                                              style: const TextStyle(
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                },
                               ),
                             ],
                           ),
@@ -235,7 +354,11 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
 
-                              const Divider(thickness: 1, height: 20),
+                              Divider(
+                                thickness: 1,
+                                height: 20,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
 
                               Text(
                                 weather.description,
@@ -250,28 +373,68 @@ class _HomePageState extends State<HomePage> {
                         //CARD Prob. de chuva
                         child: Padding(
                           padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Chance de chuva: ${weather.rainProbability}%",
-                                style: const TextStyle(fontSize: 18),
-                              ),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              if (constraints.maxWidth < 600) {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Chance de chuva:",
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
 
-                              const SizedBox(width: 10),
+                                        Text(
+                                          "${weather.rainProbability}%",
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                      ],
+                                    ),
 
-                              Expanded(
-                                child: LinearProgressIndicator(
-                                  value: weather.rainProbability / 100,
-                                ),
-                              ),
+                                    const SizedBox(height: 10),
+                                    PercentageDisplay(
+                                      percentage: weather.rainProbability,
+                                    ),
 
-                              const SizedBox(width: 10),
+                                    const SizedBox(height: 10),
 
-                              Text(
-                                "${weather.precipitationSum} mm",
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                            ],
+                                    Text(
+                                      "Precipitação: ${weather.precipitationSum} mm",
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return Row(
+                                  children: [
+                                    Text(
+                                      "Chance de chuva: ${weather.rainProbability}%",
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+
+                                    const SizedBox(width: 10),
+
+                                    Expanded(
+                                      child: PercentageDisplay(
+                                        percentage: weather.rainProbability,
+                                      ),
+                                    ),
+
+                                    const SizedBox(width: 10),
+
+                                    Text(
+                                      "${weather.precipitationSum} mm",
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
                           ),
                         ),
                       ),
@@ -318,6 +481,22 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10),
 
               const Spacer(),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.red,
+                  side: const BorderSide(color: Colors.red, width: 1),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                ),
+                onPressed: () {
+                  setState(() {
+                    futureWeather = Future.error(Exception("Erro de teste"));
+                  });
+                },
+                icon: const Icon(Icons.error_outline_sharp),
+                label: const Text("Testar ERRO!"),
+              ),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: ToggleButtons(
